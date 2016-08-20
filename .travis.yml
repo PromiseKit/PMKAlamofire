@@ -1,0 +1,14 @@
+language: objective-c
+osx_image: xcode8
+
+env:
+  - PLATFORM=Mac     ACTION=test  DESTINATION='platform=OS X'
+  - PLATFORM=iOS     ACTION=test  DESTINATION='platform=iOS Simulator,name=iPhone 6S'
+  - PLATFORM=watchOS ACTION=build DESTINATION='platform=watchOS Simulator,name=Apple Watch - 38mm'
+  - PLATFORM=tvOS    ACTION=test  DESTINATION='platform=tvOS Simulator,name=Apple TV 1080p'
+
+install:
+  - carthage bootstrap --platform $PLATFORM
+
+script:
+  - set -o pipefail && xcodebuild -scheme PMKAlamofire -destination "$DESTINATION" $ACTION | xcpretty
