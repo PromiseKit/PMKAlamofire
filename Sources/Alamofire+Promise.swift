@@ -6,21 +6,21 @@ import PromiseKit
 /**
  To import the `Alamofire` category:
 
-    use_frameworks!
-    pod "PromiseKit/Alamofire"
+     use_frameworks!
+     pod "PromiseKit/Alamofire"
 
  And then in your sources:
 
-    import PromiseKit
-*/
-extension Alamofire.Request {
-     /// Adds a handler to be called once the request has finished.
+     import PromiseKit
+ */
+extension Alamofire.DataRequest {
+    /// Adds a handler to be called once the request has finished.
     public func response() -> Promise<(URLRequest, HTTPURLResponse, Data)> {
         return Promise { fulfill, reject in
-            response(queue: nil) { a, b, c, error in
-                if let a = a, let b = b, let c = c{
+            response(queue: nil) { rsp in
+                if let a = rsp.request, let b = rsp.response, let c = rsp.data {
                     fulfill(a, b, c)
-                } else if let error = error {
+                } else if let error = rsp.error {
                     reject(error)
                 } else {
                     reject(PMKError.invalidCallingConvention)
