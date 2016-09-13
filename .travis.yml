@@ -2,13 +2,28 @@ language: objective-c
 osx_image: xcode8
 
 env:
-  - PLATFORM=Mac     ACTION=test  DESTINATION='platform=OS X'
-  - PLATFORM=iOS     ACTION=test  DESTINATION='platform=iOS Simulator,name=iPhone 6S'
-  - PLATFORM=watchOS ACTION=build DESTINATION='platform=watchOS Simulator,name=Apple Watch - 38mm'
-  - PLATFORM=tvOS    ACTION=test  DESTINATION='platform=tvOS Simulator,name=Apple TV 1080p'
+  - PLATFORM=Mac
+  - PLATFORM=iOS NAME='iPhone SE'
+  - PLATFORM=tvOS NAME='Apple TV 1080p'
+  - PLATFORM=watchOS
+
+before_install:
+  - if [ -n "$NAME" ]; then
+      export UUID=$(instruments -s | ruby -e "ARGF.each_line{ |ln| ln =~ /$NAME .* \[(.*)\]/; if \$1; puts(\$1); exit; end }");
+    fi
 
 install:
   - carthage bootstrap --platform $PLATFORM
 
 script:
-  - set -o pipefail && xcodebuild -scheme PMKAlamofire -destination "$DESTINATION" $ACTION | xcpretty
+  - set -o pipefail;
+    case $PLATFORM in
+    Mac)
+      xcodebuild -scheme PMKAlamofire test | xcpretty;;
+    iOS|tvOS)
+      xcrun instruments -w "$UUID" || true;
+      sleep 15;
+      xcodebuild -scheme PMKAlamofire -destination "id=$UUID" test | xcpretty;;
+    watchOS)
+      xcodebuild -scheme PMKAlamofire -destination "name=Apple Watch - 38mm" | xcpretty;;
+    esac

@@ -13,7 +13,7 @@ class AlamofireTests: XCTestCase {
 
         let ex = expectation(description: "")
 
-        let rq = Alamofire.request("http://example.com", withMethod: .get).responseJSON().then { rsp -> Void in
+        let rq = Alamofire.request("http://example.com", method: .get).responseJSON().then { rsp -> Void in
             XCTAssertEqual(json, rsp as? NSDictionary)
             ex.fulfill()
         }
