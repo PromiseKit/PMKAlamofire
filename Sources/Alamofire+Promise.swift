@@ -18,10 +18,10 @@ extension Alamofire.DataRequest {
     public func response() -> Promise<(URLRequest, HTTPURLResponse, Data)> {
         return Promise { fulfill, reject in
             response(queue: nil) { rsp in
-                if let a = rsp.request, let b = rsp.response, let c = rsp.data {
-                    fulfill(a, b, c)
-                } else if let error = rsp.error {
+                if let error = rsp.error {
                     reject(error)
+                } else if let a = rsp.request, let b = rsp.response, let c = rsp.data {
+                    fulfill(a, b, c)
                 } else {
                     reject(PMKError.invalidCallingConvention)
                 }
