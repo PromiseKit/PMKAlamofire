@@ -18,14 +18,14 @@ Of course, the whole point in promises is composability, so:
 ```swift
 func login() -> Promise<User> {
     let q = DispatchQueue.global()
-    UIApplication.shared.networkActivityIndicatorVisible = true
+    UIApplication.shared.isNetworkActivityIndicatorVisible = true
 
     return firstly { in
-        Alamofire.request(url, withMethod: .GET).responseData()
+        Alamofire.request(url, method: .get).responseData()
     }.then(on: q) { data in
         convertToUser(data)
     }.always {
-        UIApplication.shared.networkActivityIndicatorVisible = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 
