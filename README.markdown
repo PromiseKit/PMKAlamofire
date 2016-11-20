@@ -41,7 +41,7 @@ firstly {
 ## CococaPods
 
 ```ruby
-pod "PromiseKit/Alamofire" ~> 4.0
+pod 'PromiseKit/Alamofire', '~> 4.0'
 ```
 
 The extensions are built into `PromiseKit.framework` thus nothing else is needed.
