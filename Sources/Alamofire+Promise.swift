@@ -85,3 +85,19 @@ extension Alamofire.DataRequest {
         }
     }
 }
+
+extension Alamofire.DownloadRequest {
+    /// Adds a handler to be called once the request has finished.
+    public func responseData() -> Promise<DownloadResponse<Data>> {
+        return Promise { fulfill, reject in
+            responseData(queue: nil) { response in
+                switch response.result {
+                case .success:
+                    fulfill(response)
+                case .failure(let error):
+                    reject(error)
+                }
+            }
+        }
+    }
+}
