@@ -1,4 +1,5 @@
 @_exported import Alamofire
+import Foundation
 #if !COCOAPODS
 import PromiseKit
 #endif
