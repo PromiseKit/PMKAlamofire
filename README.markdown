@@ -41,10 +41,21 @@ firstly {
 ## CococaPods
 
 ```ruby
+# Podfile
 pod 'PromiseKit/Alamofire', '~> 4.0'
 ```
 
-The extensions are built into `PromiseKit.framework` thus nothing else is needed.
+```swift
+// `.swift` files
+import PromiseKit
+import Alamofire
+```
+
+```objc
+// `.m files`
+@import PromiseKit;
+@import Alamofire;
+```
 
 ## Carthage
 
@@ -55,13 +66,13 @@ github "PromiseKit/Alamofire-" ~> 1.0
 The extensions are built into their own framework:
 
 ```swift
-// swift
+// `.swift` files
 import PromiseKit
 import PMKAlamofire
 ```
 
 ```objc
-// objc
+// `.m files`
 @import PromiseKit;
 @import PMKAlamofire;
 ```
