@@ -57,7 +57,7 @@ The extensions are built into their own framework:
 ```swift
 // swift
 import PromiseKit
-import PMKAlamofire
+import Alamofire
 ```
 
 ```objc
