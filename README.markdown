@@ -68,7 +68,7 @@ The extensions are built into their own framework:
 ```swift
 // `.swift` files
 import PromiseKit
-import PMKAlamofire
+import Alamofire
 ```
 
 ```objc
