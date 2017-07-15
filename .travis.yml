@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8
+osx_image: xcode8.3
 
 env:
   - PLATFORM=Mac
@@ -21,8 +21,7 @@ script:
     Mac)
       xcodebuild -scheme PMKAlamofire test | xcpretty;;
     iOS|tvOS)
-      xcrun instruments -w "$UUID" || true;
-      sleep 15;
+      open -a "simulator" --args -CurrentDeviceUDID "$UUID";
       xcodebuild -scheme PMKAlamofire -destination "id=$UUID" test | xcpretty;;
     watchOS)
       xcodebuild -scheme PMKAlamofire -destination "name=Apple Watch - 38mm" | xcpretty;;
