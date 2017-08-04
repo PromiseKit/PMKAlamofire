@@ -1,28 +1,67 @@
+os: osx
 language: objective-c
-osx_image: xcode8.3
-
-env:
-  - PLATFORM=Mac
-  - PLATFORM=iOS NAME='iPhone SE'
-  - PLATFORM=tvOS NAME='Apple TV 1080p'
-  - PLATFORM=watchOS
-
+matrix:
+  include:
+    - osx_image: xcode8.2
+      env: PLAT=macOS SWFT=3.0
+    - osx_image: xcode8.2
+      env: PLAT=iOS SWFT=3.0
+    - osx_image: xcode8.2
+      env: PLAT=tvOS SWFT=3.0
+    - osx_image: xcode8.2
+      env: PLAT=watchOS SWFT=3.0
+    - osx_image: xcode8.3
+      env: PLAT=macOS SWFT=3.1
+    - osx_image: xcode8.3
+      env: PLAT=iOS SWFT=3.1
+    - osx_image: xcode8.3
+      env: PLAT=tvOS SWFT=3.1
+    - osx_image: xcode8.3
+      env: PLAT=watchOS SWFT=3.1
+    - osx_image: xcode9
+      env: PLAT=macOS SWFT=3.2
+    - osx_image: xcode9
+      env: PLAT=iOS SWFT=3.2
+    - osx_image: xcode9
+      env: PLAT=tvOS SWFT=3.2
+    - osx_image: xcode9
+      env: PLAT=watchOS SWFT=3.2
+    - osx_image: xcode9
+      env: PLAT=macOS SWFT=4.0
+    - osx_image: xcode9
+      env: PLAT=iOS SWFT=4.0
+    - osx_image: xcode9
+      env: PLAT=tvOS SWFT=4.0
+    - osx_image: xcode9
+      env: PLAT=watchOS SWFT=4.0
 before_install:
-  - if [ -n "$NAME" ]; then
+  - case $PLAT in
+    iOS)
+      NAME="iPhone SE";;
+    tvOS)
+      NAME="Apple TV 1080p";;
+    watchOS)
+      NAME="Apple Watch - 38mm";;
+    esac;
+    if [ -n "$NAME" ]; then
       export UUID=$(instruments -s | ruby -e "ARGF.each_line{ |ln| ln =~ /$NAME .* \[(.*)\]/; if \$1; puts(\$1); exit; end }");
     fi
-
 install:
-  - carthage bootstrap --platform $PLATFORM
-
+  - case $PLAT in
+    macOS)
+      carthage bootstrap --platform Mac;;
+    tvOS|iOS|watchOS)
+      carthage bootstrap --platform $PLAT;;
+    esac;
 script:
   - set -o pipefail;
-    case $PLATFORM in
-    Mac)
-      xcodebuild -scheme PMKAlamofire test | xcpretty;;
+    case $PLAT in
+    macOS)
+      xcodebuild -scheme PMKAlamofire -quiet test SWIFT_VERSION=$SWFT;;
     iOS|tvOS)
-      open -a "simulator" --args -CurrentDeviceUDID "$UUID";
-      xcodebuild -scheme PMKAlamofire -destination "id=$UUID" test | xcpretty;;
+      open -b com.apple.iphonesimulator --args -CurrentDeviceUDID "$UUID";
+      xcodebuild -scheme PMKAlamofire -destination "id=$UUID" -quiet clean build  SWIFT_VERSION=$SWFT;
+      xcodebuild -scheme PMKAlamofire -destination "id=$UUID" -quiet test;;
     watchOS)
-      xcodebuild -scheme PMKAlamofire -destination "name=Apple Watch - 38mm" | xcpretty;;
+      xcodebuild -scheme PMKAlamofire -destination "id=$UUID" -quiet clean build SWIFT_VERSION=$SWFT;
     esac

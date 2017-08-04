@@ -22,7 +22,7 @@ extension Alamofire.DataRequest {
                 if let error = rsp.error {
                     reject(error)
                 } else if let a = rsp.request, let b = rsp.response, let c = rsp.data {
-                    fulfill(a, b, c)
+                    fulfill((a, b, c))
                 } else {
                     reject(PMKError.invalidCallingConvention)
                 }
@@ -79,7 +79,7 @@ extension Alamofire.DataRequest {
             responseJSON(queue: nil, options: options, completionHandler: { response in
                 switch response.result {
                 case .success(let value):
-                    fulfill(value, PMKDataResponse(response))
+                    fulfill((value, PMKDataResponse(response)))
                 case .failure(let error):
                     reject(error)
                 }
