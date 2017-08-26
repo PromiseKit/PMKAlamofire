@@ -13,8 +13,8 @@ class AlamofireTests: XCTestCase {
 
         let ex = expectation(description: "")
 
-        let rq = Alamofire.request("http://example.com", method: .get).responseJSON().then { rsp -> Void in
-            XCTAssertEqual(json, rsp as? NSDictionary)
+        let rq = Alamofire.request("http://example.com", method: .get).responseJSON().done { rsp in
+            XCTAssertEqual(json, rsp.json as? NSDictionary)
             ex.fulfill()
         }
         waitForExpectations(timeout: 1)

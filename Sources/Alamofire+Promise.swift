@@ -1,6 +1,6 @@
 @_exported import Alamofire
 import Foundation
-#if !COCOAPODS
+#if !PMKCocoaPods
 import PromiseKit
 #endif
 
@@ -16,106 +16,71 @@ import PromiseKit
  */
 extension Alamofire.DataRequest {
     /// Adds a handler to be called once the request has finished.
-    public func response() -> Promise<(URLRequest, HTTPURLResponse, Data)> {
-        return Promise { fulfill, reject in
+    public func response(_: PMKNamespacer) -> Promise<(URLRequest, HTTPURLResponse, Data)> {
+        return Promise(.pending) { seal in
             response(queue: nil) { rsp in
                 if let error = rsp.error {
-                    reject(error)
+                    seal.reject(error)
                 } else if let a = rsp.request, let b = rsp.response, let c = rsp.data {
-                    fulfill((a, b, c))
+                    seal.fulfill((a, b, c))
                 } else {
-                    reject(PMKError.invalidCallingConvention)
+                    seal.reject(PMKError.invalidCallingConvention)
                 }
             }
         }
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseData() -> Promise<Data> {
-        return Promise { fulfill, reject in
+    public func responseData() -> Promise<(data: Data, response: PMKAlamofireDataResponse)> {
+        return Promise(.pending) { seal in
             responseData(queue: nil) { response in
                 switch response.result {
                 case .success(let value):
-                    fulfill(value)
+                    seal.fulfill((value, PMKAlamofireDataResponse(response)))
                 case .failure(let error):
-                    reject(error)
+                    seal.reject(error)
                 }
             }
         }
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseString() -> Promise<String> {
-        return Promise { fulfill, reject in
+    public func responseString() -> Promise<(string: String, response: PMKAlamofireDataResponse)> {
+        return Promise(.pending) { seal in
             responseString(queue: nil) { response in
                 switch response.result {
                 case .success(let value):
-                    fulfill(value)
+                    seal.fulfill((value, PMKAlamofireDataResponse(response)))
                 case .failure(let error):
-                    reject(error)
+                    seal.reject(error)
                 }
             }
         }
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseJSON(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<Any> {
-        return Promise { fulfill, reject in
-            responseJSON(queue: nil, options: options, completionHandler: { response in
+    public func responseJSON(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(json: Any, response: PMKAlamofireDataResponse)> {
+        return Promise(.pending) { seal in
+            responseJSON(queue: nil, options: options) { response in
                 switch response.result {
                 case .success(let value):
-                    fulfill(value)
+                    seal.fulfill((value, PMKAlamofireDataResponse(response)))
                 case .failure(let error):
-                    reject(error)
+                    seal.reject(error)
                 }
-            })
+            }
         }
-    }
-
-    /// Adds a handler to be called once the request has finished. Provides access to the detailed response object.
-    ///    request.responseJSON(with: .response).then { json, response in }
-    public func responseJSON(with: PMKAlamofireOptions, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(Any, PMKDataResponse)> {
-        return Promise { fulfill, reject in
-            responseJSON(queue: nil, options: options, completionHandler: { response in
-                switch response.result {
-                case .success(let value):
-                    fulfill((value, PMKDataResponse(response)))
-                case .failure(let error):
-                    reject(error)
-                }
-            })
-        }
-    }
-
-
-    /// Adds a handler to be called once the request has finished and the resulting JSON is rooted at a dictionary.
-    public func responseJsonDictionary(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<[String: Any]> {
-        return Promise { fulfill, reject in
-            responseJSON(queue: nil, options: options, completionHandler: { response in
-                switch response.result {
-                case .success(let value):
-                    if let value = value as? [String: Any] {
-                        fulfill(value)
-                    } else {
-                        reject(JSONError.unexpectedRootNode(value))
-                    }
-                case .failure(let error):
-                    reject(error)
-                }
-            })
-        }
-
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responsePropertyList(options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<Any> {
-        return Promise { fulfill, reject in
+    public func responsePropertyList(options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<(plist: Any, response: PMKAlamofireDataResponse)> {
+        return Promise(.pending) { seal in
             responsePropertyList(queue: nil, options: options) { response in
                 switch response.result {
                 case .success(let value):
-                    fulfill(value)
+                    seal.fulfill((value, PMKAlamofireDataResponse(response)))
                 case .failure(let error):
-                    reject(error)
+                    seal.reject(error)
                 }
             }
         }
@@ -123,15 +88,27 @@ extension Alamofire.DataRequest {
 }
 
 extension Alamofire.DownloadRequest {
+    public func response(_: PMKNamespacer) -> Promise<DefaultDownloadResponse> {
+        return Promise(.pending) { seal in
+            response(queue: nil) { response in
+                if let error = response.error {
+                    seal.reject(error)
+                } else {
+                    seal.fulfill(response)
+                }
+            }
+        }
+    }
+
     /// Adds a handler to be called once the request has finished.
     public func responseData() -> Promise<DownloadResponse<Data>> {
-        return Promise { fulfill, reject in
+        return Promise(.pending) { seal in
             responseData(queue: nil) { response in
                 switch response.result {
                 case .success:
-                    fulfill(response)
+                    seal.fulfill(response)
                 case .failure(let error):
-                    reject(error)
+                    seal.reject(error)
                 }
             }
         }
@@ -145,8 +122,8 @@ public enum PMKAlamofireOptions {
 }
 
 
-public struct PMKDataResponse {
-    fileprivate init(_ rawrsp: Alamofire.DataResponse<Any>) {
+public struct PMKAlamofireDataResponse {
+    fileprivate init<T>(_ rawrsp: Alamofire.DataResponse<T>) {
         request = rawrsp.request
         response = rawrsp.response
         data = rawrsp.data
