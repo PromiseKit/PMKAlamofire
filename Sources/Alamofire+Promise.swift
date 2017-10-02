@@ -16,9 +16,9 @@ import PromiseKit
  */
 extension Alamofire.DataRequest {
     /// Adds a handler to be called once the request has finished.
-    public func response() -> Promise<(URLRequest, HTTPURLResponse, Data)> {
+    public func response(queue: DispatchQueue? = nil) -> Promise<(URLRequest, HTTPURLResponse, Data)> {
         return Promise { fulfill, reject in
-            response(queue: nil) { rsp in
+            response(queue: queue) { rsp in
                 if let error = rsp.error {
                     reject(error)
                 } else if let a = rsp.request, let b = rsp.response, let c = rsp.data {
@@ -31,9 +31,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseData() -> Promise<Data> {
+    public func responseData(queue: DispatchQueue? = nil) -> Promise<Data> {
         return Promise { fulfill, reject in
-            responseData(queue: nil) { response in
+            responseData(queue: queue) { response in
                 switch response.result {
                 case .success(let value):
                     fulfill(value)
@@ -45,9 +45,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseString() -> Promise<String> {
+    public func responseString(queue: DispatchQueue? = nil) -> Promise<String> {
         return Promise { fulfill, reject in
-            responseString(queue: nil) { response in
+            responseString(queue: queue) { response in
                 switch response.result {
                 case .success(let value):
                     fulfill(value)
@@ -59,9 +59,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseJSON(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<Any> {
+    public func responseJSON(queue: DispatchQueue? = nil, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<Any> {
         return Promise { fulfill, reject in
-            responseJSON(queue: nil, options: options, completionHandler: { response in
+            responseJSON(queue: queue, options: options, completionHandler: { response in
                 switch response.result {
                 case .success(let value):
                     fulfill(value)
@@ -74,9 +74,9 @@ extension Alamofire.DataRequest {
 
     /// Adds a handler to be called once the request has finished. Provides access to the detailed response object.
     ///    request.responseJSON(with: .response).then { json, response in }
-    public func responseJSON(with: PMKAlamofireOptions, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(Any, PMKDataResponse)> {
+    public func responseJSON(with: PMKAlamofireOptions, options: JSONSerialization.ReadingOptions = .allowFragments, queue: DispatchQueue? = nil) -> Promise<(Any, PMKDataResponse)> {
         return Promise { fulfill, reject in
-            responseJSON(queue: nil, options: options, completionHandler: { response in
+            responseJSON(queue: queue, options: options, completionHandler: { response in
                 switch response.result {
                 case .success(let value):
                     fulfill((value, PMKDataResponse(response)))
@@ -89,9 +89,9 @@ extension Alamofire.DataRequest {
 
 
     /// Adds a handler to be called once the request has finished and the resulting JSON is rooted at a dictionary.
-    public func responseJsonDictionary(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<[String: Any]> {
+    public func responseJsonDictionary(queue: DispatchQueue? = nil, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<[String: Any]> {
         return Promise { fulfill, reject in
-            responseJSON(queue: nil, options: options, completionHandler: { response in
+            responseJSON(queue: queue, options: options, completionHandler: { response in
                 switch response.result {
                 case .success(let value):
                     if let value = value as? [String: Any] {
@@ -108,9 +108,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responsePropertyList(options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<Any> {
+    public func responsePropertyList(queue: DispatchQueue? = nil, options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<Any> {
         return Promise { fulfill, reject in
-            responsePropertyList(queue: nil, options: options) { response in
+            responsePropertyList(queue: queue, options: options) { response in
                 switch response.result {
                 case .success(let value):
                     fulfill(value)
@@ -124,9 +124,9 @@ extension Alamofire.DataRequest {
 
 extension Alamofire.DownloadRequest {
     /// Adds a handler to be called once the request has finished.
-    public func responseData() -> Promise<DownloadResponse<Data>> {
+    public func responseData(queue: DispatchQueue? = nil) -> Promise<DownloadResponse<Data>> {
         return Promise { fulfill, reject in
-            responseData(queue: nil) { response in
+            responseData(queue: queue) { response in
                 switch response.result {
                 case .success:
                     fulfill(response)
