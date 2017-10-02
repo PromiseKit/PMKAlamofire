@@ -7,7 +7,7 @@ This project supports Swift 3.1, 3.2 and 4.0.
 ## Usage
 
 ```swift
-Alamofire.request("https://httpbin.org/get", withMethod: .GET)
+Alamofire.request("https://httpbin.org/get", method: .GET)
     .responseJSON().then { json in
         //…
     }.catch{ error in
