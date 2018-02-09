@@ -17,7 +17,7 @@ import PromiseKit
 extension Alamofire.DataRequest {
     /// Adds a handler to be called once the request has finished.
     public func response(_: PMKNamespacer) -> Promise<(URLRequest, HTTPURLResponse, Data)> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             response(queue: nil) { rsp in
                 if let error = rsp.error {
                     seal.reject(error)
@@ -32,7 +32,7 @@ extension Alamofire.DataRequest {
 
     /// Adds a handler to be called once the request has finished.
     public func responseData() -> Promise<(data: Data, response: PMKAlamofireDataResponse)> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             responseData(queue: nil) { response in
                 switch response.result {
                 case .success(let value):
@@ -46,7 +46,7 @@ extension Alamofire.DataRequest {
 
     /// Adds a handler to be called once the request has finished.
     public func responseString() -> Promise<(string: String, response: PMKAlamofireDataResponse)> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             responseString(queue: nil) { response in
                 switch response.result {
                 case .success(let value):
@@ -60,7 +60,7 @@ extension Alamofire.DataRequest {
 
     /// Adds a handler to be called once the request has finished.
     public func responseJSON(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(json: Any, response: PMKAlamofireDataResponse)> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             responseJSON(queue: nil, options: options) { response in
                 switch response.result {
                 case .success(let value):
@@ -74,7 +74,7 @@ extension Alamofire.DataRequest {
 
     /// Adds a handler to be called once the request has finished.
     public func responsePropertyList(options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<(plist: Any, response: PMKAlamofireDataResponse)> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             responsePropertyList(queue: nil, options: options) { response in
                 switch response.result {
                 case .success(let value):
@@ -89,7 +89,7 @@ extension Alamofire.DataRequest {
 
 extension Alamofire.DownloadRequest {
     public func response(_: PMKNamespacer) -> Promise<DefaultDownloadResponse> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             response(queue: nil) { response in
                 if let error = response.error {
                     seal.reject(error)
@@ -102,7 +102,7 @@ extension Alamofire.DownloadRequest {
 
     /// Adds a handler to be called once the request has finished.
     public func responseData() -> Promise<DownloadResponse<Data>> {
-        return Promise(.pending) { seal in
+        return Promise { seal in
             responseData(queue: nil) { response in
                 switch response.result {
                 case .success:
