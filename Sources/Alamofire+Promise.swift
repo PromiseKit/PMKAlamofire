@@ -16,9 +16,9 @@ import PromiseKit
  */
 extension Alamofire.DataRequest {
     /// Adds a handler to be called once the request has finished.
-    public func response(_: PMKNamespacer) -> Promise<(URLRequest, HTTPURLResponse, Data)> {
+    public func response(_: PMKNamespacer, queue: DispatchQueue? = nil) -> Promise<(URLRequest, HTTPURLResponse, Data)> {
         return Promise { seal in
-            response(queue: nil) { rsp in
+            response(queue: queue) { rsp in
                 if let error = rsp.error {
                     seal.reject(error)
                 } else if let a = rsp.request, let b = rsp.response, let c = rsp.data {
@@ -31,9 +31,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseData() -> Promise<(data: Data, response: PMKAlamofireDataResponse)> {
+    public func responseData(queue: DispatchQueue? = nil) -> Promise<(data: Data, response: PMKAlamofireDataResponse)> {
         return Promise { seal in
-            responseData(queue: nil) { response in
+            responseData(queue: queue) { response in
                 switch response.result {
                 case .success(let value):
                     seal.fulfill((value, PMKAlamofireDataResponse(response)))
@@ -45,9 +45,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseString() -> Promise<(string: String, response: PMKAlamofireDataResponse)> {
+    public func responseString(queue: DispatchQueue? = nil) -> Promise<(string: String, response: PMKAlamofireDataResponse)> {
         return Promise { seal in
-            responseString(queue: nil) { response in
+            responseString(queue: queue) { response in
                 switch response.result {
                 case .success(let value):
                     seal.fulfill((value, PMKAlamofireDataResponse(response)))
@@ -59,9 +59,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseJSON(options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(json: Any, response: PMKAlamofireDataResponse)> {
+    public func responseJSON(queue: DispatchQueue? = nil, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(json: Any, response: PMKAlamofireDataResponse)> {
         return Promise { seal in
-            responseJSON(queue: nil, options: options) { response in
+            responseJSON(queue: queue, options: options) { response in
                 switch response.result {
                 case .success(let value):
                     seal.fulfill((value, PMKAlamofireDataResponse(response)))
@@ -73,9 +73,9 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responsePropertyList(options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<(plist: Any, response: PMKAlamofireDataResponse)> {
+    public func responsePropertyList(queue: DispatchQueue? = nil, options: PropertyListSerialization.ReadOptions = PropertyListSerialization.ReadOptions()) -> Promise<(plist: Any, response: PMKAlamofireDataResponse)> {
         return Promise { seal in
-            responsePropertyList(queue: nil, options: options) { response in
+            responsePropertyList(queue: queue, options: options) { response in
                 switch response.result {
                 case .success(let value):
                     seal.fulfill((value, PMKAlamofireDataResponse(response)))
@@ -88,9 +88,9 @@ extension Alamofire.DataRequest {
 }
 
 extension Alamofire.DownloadRequest {
-    public func response(_: PMKNamespacer) -> Promise<DefaultDownloadResponse> {
+    public func response(_: PMKNamespacer, queue: DispatchQueue? = nil) -> Promise<DefaultDownloadResponse> {
         return Promise { seal in
-            response(queue: nil) { response in
+            response(queue: queue) { response in
                 if let error = response.error {
                     seal.reject(error)
                 } else {
@@ -101,9 +101,9 @@ extension Alamofire.DownloadRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseData() -> Promise<DownloadResponse<Data>> {
+    public func responseData(queue: DispatchQueue? = nil) -> Promise<DownloadResponse<Data>> {
         return Promise { seal in
-            responseData(queue: nil) { response in
+            responseData(queue: queue) { response in
                 switch response.result {
                 case .success:
                     seal.fulfill(response)
