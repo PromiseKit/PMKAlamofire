@@ -2,7 +2,7 @@
 
 This project adds promises to [Alamofire](https://github.com/Alamofire/Alamofire).
 
-This project supports Swift 3.1, 3.2 and 4.0.
+This project supports Swift 3.1, 3.2, 4.0 and 4.1.
 
 ## Usage
 
@@ -44,7 +44,7 @@ firstly {
 
 ```ruby
 # Podfile
-pod 'PromiseKit/Alamofire', '~> 4.0'
+pod 'PromiseKit/Alamofire', '~> 6.0'
 ```
 
 ```swift
@@ -62,7 +62,7 @@ import Alamofire
 ## Carthage
 
 ```ruby
-github "PromiseKit/Alamofire-" ~> 1.0
+github "PromiseKit/Alamofire-" ~> 3.0
 ```
 
 The extensions are built into their own framework:
@@ -84,7 +84,7 @@ import PMKAlamofire
 ```swift
 let package = Package(
     dependencies: [
-        .Target(url: "https://github.com/PromiseKit/Alamofire", majorVersion: 1)
+        .Target(url: "https://github.com/PromiseKit/Alamofire", majorVersion: 3)
     ]
 )
 ```
