@@ -86,6 +86,7 @@ extension Alamofire.DataRequest {
         }
     }
 
+#if swift(>=3.2)
     /// Adds a handler to be called once the request has finished.
     public func responseDecodable<T: Decodable>(queue: DispatchQueue? = nil) -> Promise<T> {
         return Promise { seal in
@@ -103,6 +104,7 @@ extension Alamofire.DataRequest {
             }
         }
     }
+#endif
 }
 
 extension Alamofire.DownloadRequest {
