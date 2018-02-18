@@ -85,6 +85,24 @@ extension Alamofire.DataRequest {
             }
         }
     }
+
+    /// Adds a handler to be called once the request has finished.
+    public func responseDecodable<T: Decodable>(queue: DispatchQueue? = nil) -> Promise<T> {
+        return Promise { seal in
+            responseData(queue: queue) { response in
+                switch response.result {
+                case .success(let value):
+                    do {
+                        seal.fulfill(try JSONDecoder().decode(T.self, from: value))
+                    } catch {
+                        seal.reject(error)
+                    }
+                case .failure(let error):
+                    seal.reject(error)
+                }
+            }
+        }
+    }
 }
 
 extension Alamofire.DownloadRequest {
@@ -114,7 +132,6 @@ extension Alamofire.DownloadRequest {
         }
     }
 }
-
 
 
 public enum PMKAlamofireOptions {
