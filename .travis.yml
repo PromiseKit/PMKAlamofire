@@ -19,11 +19,11 @@ matrix:
 cache:
   directories:
   - Carthage
+before_install:
+  - carthage bootstrap --cache-builds --no-use-binaries --platform $PLAT --verbose
 install:
-  - carthage bootstrap --cache-builds --no-use-binaries --platform $PLAT
+  - xcodebuild -scheme PMKAlamofire -quiet -destination "$DST" SWIFT_VERSION=$SWFT build
 script:
-  - set -o pipefail
-  - xcodebuild -scheme PMKAlamofire -quiet -destination "$DST" build SWIFT_VERSION=$SWFT
   - if [ "$PLAT" != "watchOS" ]; then
       xcodebuild -scheme PMKAlamofire -quiet -destination "$DST" test;
     fi
