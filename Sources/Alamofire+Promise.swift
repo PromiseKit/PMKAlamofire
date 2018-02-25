@@ -87,15 +87,21 @@ extension Alamofire.DataRequest {
     }
 
 #if swift(>=3.2)
-    /// Adds a handler to be called once the request has finished.
-    public func responseDecodable<T: Decodable>(queue: DispatchQueue? = nil) -> Promise<T> {
+    /**
+     Returns a Promise for a DecJodable
+     Adds a handler to be called once the request has finished.
+     
+     - Parameter queue: DispatchQueue, by default nil
+     - Parameter decoder: JSONDecoder, by default JSONDecoder()
+     */
+    public func responseDecodable<T: Decodable>(queue: DispatchQueue? = nil, decoder: JSONDecoder = JSONDecoder()) -> Promise<T> {
         return Promise { seal in
             responseData(queue: queue) { response in
                 switch response.result {
                 case .success(let value):
                     do {
-                        seal.fulfill(try JSONDecoder().decode(T.self, from: value))
-                    } catch {
+                        seal.fulfill(try decoder.decode(T.self, from: value))
+                    } catch let error {
                         seal.reject(error)
                     }
                 case .failure(let error):
