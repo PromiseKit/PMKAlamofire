@@ -88,7 +88,7 @@ extension Alamofire.DataRequest {
 
 #if swift(>=3.2)
     /**
-     Returns a Promise for a DecJodable
+     Returns a Promise for a Decodable
      Adds a handler to be called once the request has finished.
      
      - Parameter queue: DispatchQueue, by default nil
@@ -101,7 +101,7 @@ extension Alamofire.DataRequest {
                 case .success(let value):
                     do {
                         seal.fulfill(try decoder.decode(T.self, from: value))
-                    } catch let error {
+                    } catch {
                         seal.reject(error)
                     }
                 case .failure(let error):

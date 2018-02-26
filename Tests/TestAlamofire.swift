@@ -23,7 +23,7 @@ class AlamofireTests: XCTestCase {
     override func tearDown() {
         OHHTTPStubs.removeAllStubs()
     }
-    
+    #if swift(>=3.2)
     struct KeyValuesService: Decodable {
         let key1: String
         let key2: [String]
@@ -50,4 +50,5 @@ class AlamofireTests: XCTestCase {
         waitForExpectations(timeout: 1)
         
     }
+    #endif
 }
