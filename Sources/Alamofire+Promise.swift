@@ -142,7 +142,7 @@ public enum PMKAlamofireOptions {
 
 
 public struct PMKAlamofireDataResponse {
-    fileprivate init<T>(_ rawrsp: Alamofire.DataResponse<T>) {
+    public init<T>(_ rawrsp: Alamofire.DataResponse<T>) {
         request = rawrsp.request
         response = rawrsp.response
         data = rawrsp.data
