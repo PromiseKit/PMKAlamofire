@@ -8,8 +8,8 @@ This project supports Swift 3.1, 3.2, 4.0 and 4.1.
 
 ```swift
 Alamofire.request("https://httpbin.org/get", method: .GET)
-    .responseJSON().then { json in
-        //…
+    .responseJSON().then { json, rsp in
+        // 
     }.catch{ error in
         //…
     }
@@ -24,16 +24,16 @@ func login() -> Promise<User> {
 
     return firstly { in
         Alamofire.request(url, method: .get).responseData()
-    }.then(on: q) { data in
+    }.map(on: q) { data, rsp in
         convertToUser(data)
-    }.always {
+    }.ensure {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 
 firstly {
     login()
-}.then { user in
+}.done { user in
     //…
 }.catch { error in
    UIAlertController(/*…*/).show() 
