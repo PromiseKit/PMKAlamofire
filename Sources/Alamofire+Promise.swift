@@ -136,11 +136,7 @@ extension Alamofire.DownloadRequest {
 }
 
 
-public enum PMKAlamofireOptions {
-    case response
-}
-
-
+/// Alamofire.DataResponse, but without the `result`, since the Promise represents the `Result`
 public struct PMKAlamofireDataResponse {
     public init<T>(_ rawrsp: Alamofire.DataResponse<T>) {
         request = rawrsp.request
