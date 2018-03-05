@@ -110,6 +110,30 @@ extension Alamofire.DataRequest {
             }
         }
     }
+ 
+     /**
+     Returns a Promise for a Decodable
+     Adds a handler to be called once the request has finished.
+     
+     - Parameter queue: DispatchQueue, by default nil
+     - Parameter decoder: JSONDecoder, by default JSONDecoder()
+     */
+    public func responseDecodable<T: Decodable>(_ type: T.Type, queue: DispatchQueue? = nil, decoder: JSONDecoder = JSONDecoder()) -> Promise<T> {
+        return Promise { seal in
+            responseData(queue: queue) { response in
+                switch response.result {
+                case .success(let value):
+                    do {
+                        seal.fulfill(try decoder.decode(type, from: value))
+                    } catch {
+                        seal.reject(error)
+                    }
+                case .failure(let error):
+                    seal.reject(error)
+                }
+            }
+        }
+    }
 #endif
 }
 
