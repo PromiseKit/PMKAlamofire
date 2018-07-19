@@ -188,6 +188,7 @@
 				PromiseKit,
 				OHHTTPStubs,
 				Alamofire,
+				PMKCancel,
 			);
 			name = "Embed Carthage Frameworks";
 			outputPaths = (
