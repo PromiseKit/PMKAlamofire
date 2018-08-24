@@ -1,3 +1,4 @@
-github "Alamofire/Alamofire" "4.7.2"
+github "Alamofire/Alamofire" "4.7.3"
 github "AliSoftware/OHHTTPStubs" "6.1.0"
-github "mxcl/PromiseKit" "6.3.3"
+github "dougzilla32/Cancel" "1.0.0"
+github "dougzilla32/PromiseKit" "a0217bd7b69af68237dcdeee0197e63259b9d445"
