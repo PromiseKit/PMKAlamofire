@@ -14,13 +14,16 @@ jobs:
       name: pod lib lint --swift-version=3.1
       os: osx
       language: objective-c
-      cache: cocoapods
+      cache:
+        - cocoapods
+        - directories:
+          - Carthage
       before_install:
         gem install cocoapods --prerelease --version 1.6.0.beta.1
       install:
         carthage bootstrap --no-build PromiseKit
       script: |
-        cd Carthage/Checkouts/Alamofire-
+        cd Carthage/Checkouts/PromiseKit
         mv .github/PromiseKit.podspec .
         rm -rf Extensions/Alamofire/Sources
         cp -R ../../../Sources Extensions/Alamofire
