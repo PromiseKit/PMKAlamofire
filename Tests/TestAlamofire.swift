@@ -131,7 +131,7 @@ extension AlamofireTests {
         let ex = expectation(description: "")
         
         firstly {
-            Alamofire.request("http://example.com", method: .get).cancellableResponseDecodable(Fixture.self)
+            cancellable(Alamofire.request("http://example.com", method: .get).responseDecodable(Fixture.self))
         }.done { fixture in
             XCTAssert(fixture.key1 == "value1", "Value1 found")
             XCTFail("failed to cancel request")
