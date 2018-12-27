@@ -64,21 +64,22 @@ jobs:
         directories:
         - Carthage
 
-    - &linux
-      stage: compile
-      env: SWIFT_BUILD_VERSION=3  SWIFT_VERSION=4.0.3
-      name: Linux / Swift 3.2.3
-      os: linux
-      dist: trusty
-      sudo: required
-      language: generic
-      before_install:
-        eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
-      script:
-        swift build -Xswiftc -swift-version -Xswiftc $SWIFT_BUILD_VERSION
-    - <<: *linux
-      env: SWIFT_BUILD_VERSION=4  SWIFT_VERSION=4.2.1
-      name: Linux / Swift 4.2.1
+# Alamofire does not yet support Linux
+    # - &linux
+    #   stage: compile
+    #   env: SWIFT_BUILD_VERSION=3  SWIFT_VERSION=4.0.3
+    #   name: Linux / Swift 3.2.3
+    #   os: linux
+    #   dist: trusty
+    #   sudo: required
+    #   language: generic
+    #   before_install:
+    #     eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
+    #   script:
+    #     swift build -Xswiftc -swift-version -Xswiftc $SWIFT_BUILD_VERSION
+    # - <<: *linux
+    #   env: SWIFT_BUILD_VERSION=4  SWIFT_VERSION=4.2.1
+    #   name: Linux / Swift 4.2.1
 
     - &swiftpm
       stage: compile
