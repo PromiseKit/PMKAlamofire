@@ -3,9 +3,7 @@ branches:
     - master
 stages:
   - lint
-  - carthage
-  - swiftpm
-  - linux
+  - compile
   - test
 jobs:
   include:
@@ -55,7 +53,7 @@ jobs:
       env: SWIFT=4.2
       name: pod lib lint --swift-version=4.2
 
-    - stage: carthage
+    - stage: compile
       osx_image: xcode10
       name: Carthage / watchOS
       os: osx
