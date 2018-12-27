@@ -4,6 +4,8 @@ branches:
 stages:
   - lint
   - carthage
+  - swiftpm
+  - linux
   - test
 jobs:
   include:
@@ -63,6 +65,36 @@ jobs:
       cache:
         directories:
         - Carthage
+
+    - &linux
+      stage: compile
+      env: SWIFT_BUILD_VERSION=3  SWIFT_VERSION=4.0.3
+      name: Linux / Swift 3.2.3
+      os: linux
+      dist: trusty
+      sudo: required
+      language: generic
+      before_install:
+        eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
+      script:
+        swift build -Xswiftc -swift-version -Xswiftc $SWIFT_BUILD_VERSION
+    - <<: *linux
+      env: SWIFT_BUILD_VERSION=4  SWIFT_VERSION=4.2.1
+      name: Linux / Swift 4.2.1
+
+    - &swiftpm
+      stage: compile
+      name: Xcode 8.3 / SwiftPM
+      os: osx
+      osx_image: xcode8.3
+      language: objective-c
+      script: swift build
+    - <<: *swiftpm
+      name: Xcode 9.4 / SwiftPM
+      osx_image: xcode9.4
+    - <<: *swiftpm
+      name: Xcode 10.1 / SwiftPM
+      osx_image: xcode10
 
     - &test
       stage: test
