@@ -62,7 +62,7 @@ import Alamofire
 ## Carthage
 
 ```ruby
-github "PromiseKit/Alamofire-" ~> 3.0
+github "PromiseKit/PMKAlamofire" ~> 3.0
 ```
 
 The extensions are built into their own framework:
@@ -84,10 +84,10 @@ import PMKAlamofire
 ```swift
 let package = Package(
     dependencies: [
-        .Target(url: "https://github.com/PromiseKit/Alamofire", majorVersion: 3)
+        .Target(url: "https://github.com/PromiseKit/PMKAlamofire", majorVersion: 3)
     ]
 )
 ```
 
 
-[Build Status]: https://travis-ci.org/PromiseKit/Alamofire.svg?branch=master
+[Build Status]: https://travis-ci.org/PromiseKit/PMKAlamofire.svg?branch=master
