@@ -19,7 +19,7 @@ jobs:
         - directories:
           - Carthage
       before_install:
-        gem install cocoapods --prerelease --version 1.6.0.beta.1
+        gem install cocoapods --prerelease --version 1.7.0.beta.2
       install:
         carthage bootstrap --no-build PromiseKit
       script: |
@@ -49,9 +49,13 @@ jobs:
       env: SWIFT=4.1
       name: pod lib lint --swift-version=4.1
     - <<: *pod
-      osx_image: xcode10
+      osx_image: xcode10.1
       env: SWIFT=4.2
       name: pod lib lint --swift-version=4.2
+    - <<: *pod
+      osx_image: xcode10.2
+      env: SWIFT=5.0
+      name: pod lib lint --swift-version=5.0
 
     - stage: compile
       osx_image: xcode10
@@ -63,23 +67,6 @@ jobs:
       cache:
         directories:
         - Carthage
-
-# Alamofire does not yet support Linux
-    # - &linux
-    #   stage: compile
-    #   env: SWIFT_BUILD_VERSION=3  SWIFT_VERSION=4.0.3
-    #   name: Linux / Swift 3.2.3
-    #   os: linux
-    #   dist: trusty
-    #   sudo: required
-    #   language: generic
-    #   before_install:
-    #     eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
-    #   script:
-    #     swift build -Xswiftc -swift-version -Xswiftc $SWIFT_BUILD_VERSION
-    # - <<: *linux
-    #   env: SWIFT_BUILD_VERSION=4  SWIFT_VERSION=4.2.1
-    #   name: Linux / Swift 4.2.1
 
     - &swiftpm
       stage: compile
@@ -93,27 +80,31 @@ jobs:
       osx_image: xcode9.4
     - <<: *swiftpm
       name: Xcode 10.1 / SwiftPM
-      osx_image: xcode10
+      osx_image: xcode10.1
+    - <<: *swiftpm
+      name: Xcode 10.2 / SwiftPM
+      osx_image: xcode10.2
 
     - &test
       stage: test
-      osx_image: xcode10
+      osx_image: xcode10.2
       name: macOS Tests
       env: DST='arch=x86_64' PLAT=macOS
       os: osx
       language: objective-c
+      xcode_scheme: PMKAlamofire
+      xcode_project: PMKAlamofire.xodeproj
+      xcode_destination: 'platform=macOS'
       cache:
         directories:
         - Carthage
       before_install:
         carthage bootstrap --cache-builds --no-use-binaries --platform $PLAT
-      install:
-        xcodebuild -scheme PMKAlamofire -target PMKAlamofire -quiet -destination "$DST" SWIFT_TREAT_WARNINGS_AS_ERRORS=YES build
-      script:
-        xcodebuild -scheme PMKAlamofire -quiet -destination "$DST" test
     - <<: *test
-      env: DST='OS=12.0,name=iPhone SE' PLAT=iOS
+      xcode_destination: 'platform=iOS Simulator,OS=12.2,name=iPhone SE'
+      env: PLAT=iOS
       name: iOS Tests
     - <<: *test
-      env: DST='OS=12.0,name=Apple TV' PLAT=tvOS
+      xcode_destination: 'platform=tvOS Simulator,OS=12.0,name=Apple TV'
+      env: PLAT=tvOS
       name: tvOS Tests
