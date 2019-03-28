@@ -19,7 +19,7 @@ jobs:
         - directories:
           - Carthage
       before_install:
-        gem install cocoapods --prerelease --version 1.6.0.beta.1
+        gem install cocoapods --prerelease --version 1.7.0.beta.3
       install:
         carthage bootstrap --no-build PromiseKit
       script: |
