@@ -1,3 +1,7 @@
+os: osx
+language: swift
+osx_image: xcode10.2
+
 branches:
   only: 
     - master
@@ -11,9 +15,6 @@ jobs:
       stage: lint
       osx_image: xcode8.3
       env: SWIFT=3.1
-      name: pod lib lint --swift-version=3.1
-      os: osx
-      language: objective-c
       cache:
         - cocoapods
         - directories:
@@ -31,55 +32,35 @@ jobs:
     - <<: *pod
       osx_image: xcode9.2
       env: SWIFT=3.2
-      name: pod lib lint --swift-version=3.2
     - <<: *pod
       osx_image: xcode9.4
       env: SWIFT=3.3
-      name: pod lib lint --swift-version=3.3
     - <<: *pod
       osx_image: xcode10
       env: SWIFT=3.4
-      name: pod lib lint --swift-version=3.4
     - <<: *pod
       osx_image: xcode9.2
       env: SWIFT=4.0
-      name: pod lib lint --swift-version=4.0
     - <<: *pod
       osx_image: xcode9.4
       env: SWIFT=4.1
-      name: pod lib lint --swift-version=4.1
     - <<: *pod
       osx_image: xcode10
       env: SWIFT=4.2
-      name: pod lib lint --swift-version=4.2
-
+    - <<: *pod
+      osx_image: xcode10.2
+      env: SWIFT=4.3
+    - <<: *pod
+      osx_image: xcode10.2
+      env: SWIFT=5.0
+      
     - stage: compile
-      osx_image: xcode10
       name: Carthage / watchOS
-      os: osx
-      language: objective-c
       script:
         carthage bootstrap --platform watchOS
       cache:
         directories:
         - Carthage
-
-# Alamofire does not yet support Linux
-    # - &linux
-    #   stage: compile
-    #   env: SWIFT_BUILD_VERSION=3  SWIFT_VERSION=4.0.3
-    #   name: Linux / Swift 3.2.3
-    #   os: linux
-    #   dist: trusty
-    #   sudo: required
-    #   language: generic
-    #   before_install:
-    #     eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
-    #   script:
-    #     swift build -Xswiftc -swift-version -Xswiftc $SWIFT_BUILD_VERSION
-    # - <<: *linux
-    #   env: SWIFT_BUILD_VERSION=4  SWIFT_VERSION=4.2.1
-    #   name: Linux / Swift 4.2.1
 
     - &swiftpm
       stage: compile
@@ -94,6 +75,9 @@ jobs:
     - <<: *swiftpm
       name: Xcode 10.1 / SwiftPM
       osx_image: xcode10
+    - <<: *swiftpm
+      name: Xcode 10.2 / SwiftPM
+      osx_image: xcode10.2
 
     - &test
       stage: test
