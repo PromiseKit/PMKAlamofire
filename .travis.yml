@@ -1,9 +1,14 @@
+os: osx
+language: swift
+osx_image: xcode10.2
+
 branches:
   only: 
     - master
 stages:
   - lint
-  - compile
+  - carthage
+  - swiftpm
   - test
 jobs:
   include:
@@ -11,9 +16,6 @@ jobs:
       stage: lint
       osx_image: xcode8.3
       env: SWIFT=3.1
-      name: pod lib lint --swift-version=3.1
-      os: osx
-      language: objective-c
       cache:
         - cocoapods
         - directories:
@@ -31,89 +33,65 @@ jobs:
     - <<: *pod
       osx_image: xcode9.2
       env: SWIFT=3.2
-      name: pod lib lint --swift-version=3.2
     - <<: *pod
       osx_image: xcode9.4
       env: SWIFT=3.3
-      name: pod lib lint --swift-version=3.3
     - <<: *pod
-      osx_image: xcode10
+      osx_image: xcode10.1
       env: SWIFT=3.4
-      name: pod lib lint --swift-version=3.4
     - <<: *pod
       osx_image: xcode9.2
       env: SWIFT=4.0
-      name: pod lib lint --swift-version=4.0
     - <<: *pod
       osx_image: xcode9.4
       env: SWIFT=4.1
-      name: pod lib lint --swift-version=4.1
     - <<: *pod
-      osx_image: xcode10
+      osx_image: xcode10.1
       env: SWIFT=4.2
-      name: pod lib lint --swift-version=4.2
-
-    - stage: compile
-      osx_image: xcode10
-      name: Carthage / watchOS
-      os: osx
-      language: objective-c
-      script:
-        carthage bootstrap --platform watchOS
-      cache:
-        directories:
+    - <<: *pod
+      osx_image: xcode10.2
+      env: SWIFT=4.3
+    - <<: *pod
+      osx_image: xcode10.2
+      env: SWIFT=5.0
+      
+    - &carthage
+      stage: carthage
+      osx_image: xcode9.2
+      script: |
+        carthage bootstrap --cache-builds
+        sed -i '' "s/SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;/SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;/" *.xcodeproj/project.pbxproj
+        carthage build --no-skip-current
+      cache.directories:
         - Carthage
-
-# Alamofire does not yet support Linux
-    # - &linux
-    #   stage: compile
-    #   env: SWIFT_BUILD_VERSION=3  SWIFT_VERSION=4.0.3
-    #   name: Linux / Swift 3.2.3
-    #   os: linux
-    #   dist: trusty
-    #   sudo: required
-    #   language: generic
-    #   before_install:
-    #     eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
-    #   script:
-    #     swift build -Xswiftc -swift-version -Xswiftc $SWIFT_BUILD_VERSION
-    # - <<: *linux
-    #   env: SWIFT_BUILD_VERSION=4  SWIFT_VERSION=4.2.1
-    #   name: Linux / Swift 4.2.1
+    - <<: *carthage
+      osx_image: xcode9.4
+    - <<: *carthage
+      osx_image: xcode10.1
+    - <<: *carthage
+      osx_image: xcode10.2
 
     - &swiftpm
-      stage: compile
-      name: Xcode 8.3 / SwiftPM
-      os: osx
+      stage: swiftpm
       osx_image: xcode8.3
-      language: objective-c
       script: swift build
     - <<: *swiftpm
-      name: Xcode 9.4 / SwiftPM
       osx_image: xcode9.4
     - <<: *swiftpm
-      name: Xcode 10.1 / SwiftPM
-      osx_image: xcode10
+      osx_image: xcode10.1
+    - <<: *swiftpm
+      osx_image: xcode10.2
 
     - &test
       stage: test
-      osx_image: xcode10
-      name: macOS Tests
-      env: DST='arch=x86_64' PLAT=macOS
-      os: osx
-      language: objective-c
-      cache:
-        directories:
+      xcode_scheme: PMKAlamofire
+      xcode_project: PMKAlamofire.xcodeproj
+      xcode_destination: 'platform=macOS'
+      cache.directories:
         - Carthage
       before_install:
-        carthage bootstrap --cache-builds --no-use-binaries --platform $PLAT
-      install:
-        xcodebuild -scheme PMKAlamofire -target PMKAlamofire -quiet -destination "$DST" SWIFT_TREAT_WARNINGS_AS_ERRORS=YES build
-      script:
-        xcodebuild -scheme PMKAlamofire -quiet -destination "$DST" test
+        carthage bootstrap --cache-builds --no-use-binaries
     - <<: *test
-      env: DST='OS=12.0,name=iPhone SE' PLAT=iOS
-      name: iOS Tests
+      xcode_destination: 'platform=iOS Simulator,OS=12.2,name=iPhone SE'
     - <<: *test
-      env: DST='OS=12.0,name=Apple TV' PLAT=tvOS
-      name: tvOS Tests
+      xcode_destination: 'platform=tvOS Simulator,OS=12.2,name=Apple TV'
