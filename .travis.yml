@@ -23,7 +23,7 @@ jobs:
       before_install:
         gem install cocoapods --prerelease --version 1.7.0.beta.3
       install:
-        carthage bootstrap --no-build PromiseKit
+        carthage bootstrap --no-build --new-resolver PromiseKit
       script: |
         cd Carthage/Checkouts/PromiseKit
         mv .github/PromiseKit.podspec .
@@ -59,7 +59,7 @@ jobs:
       stage: carthage
       osx_image: xcode9.2
       script: |
-        carthage bootstrap --cache-builds
+        carthage bootstrap --cache-builds --new-resolver
         sed -i '' "s/SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;/SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;/" *.xcodeproj/project.pbxproj
         carthage build --no-skip-current
       cache.directories:
@@ -90,7 +90,7 @@ jobs:
       cache.directories:
         - Carthage
       before_install:
-        carthage bootstrap --cache-builds --no-use-binaries
+        carthage bootstrap --cache-builds --new-resolver --no-use-binaries
     - <<: *test
       xcode_destination: 'platform=iOS Simulator,OS=12.2,name=iPhone SE'
     - <<: *test
