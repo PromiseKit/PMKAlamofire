@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-		name: "PMKAlamofire",
+        name: "PMKAlamofire",
         platforms: [.macOS(.v10_12),
                     .iOS(.v10),
                     .tvOS(.v10),
@@ -16,9 +16,9 @@ let package = Package(
             .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.2.2")
         ],
         targets: [
-            .target(name: "PMKAlamofire", path: "Sources", dependencies: [
+            .target(name: "PMKAlamofire", dependencies: [
                  .product(name: "PromiseKit"),
                  .product(name: "Alamofire"),
-            ])
+            ], path: "Sources")
         ],
         swiftLanguageVersions: [.v5])
