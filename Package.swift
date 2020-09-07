@@ -10,5 +10,5 @@ let package = Package(name: "PMKAlamofire",
                       products: [.library(name: "PMKAlamofire", targets: ["PMKAlamofire"])],
                       dependencies: [.package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.2"),
                                      .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.2.2")],
-                      targets: [.target(name: "PMKAlamofire", path: "Source")],
+                      targets: [.target(name: "PMKAlamofire", path: "Sources")],
                       swiftLanguageVersions: [.v5])
