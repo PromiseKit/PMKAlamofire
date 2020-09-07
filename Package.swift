@@ -9,6 +9,6 @@ let package = Package(name: "PMKAlamofire",
                                   .watchOS(.v3)],
                       products: [.library(name: "PMKAlamofire", targets: ["PMKAlamofire"])],
                       targets: [.target(name: "PMKAlamofire", path: "Source")],
-                      dependencies: [.package(url: "https://github.com/mxcl/PromiseKit.git", majorVersion: 6),
-                                     .package(url: "https://github.com/Alamofire/Alamofire.git", majorVersion: 5)],
+                      dependencies: [.package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.2"),
+                                     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.2.2")],
                       swiftLanguageVersions: [.v5])
