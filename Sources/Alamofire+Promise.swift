@@ -124,7 +124,7 @@ extension Alamofire.DataRequest {
 }
 
 extension Alamofire.DownloadRequest {
-    public func response(_: PMKNamespacer, queue: DispatchQueue = .main) -> Promise<AFDownloadResponse<URL?>> {
+    public func response(_: PMKNamespacer, queue: DispatchQueue = .main) -> Promise<DownloadResponse<URL?,AFError>> {
         return Promise { seal in
             response(queue: queue) { response in
                 if let error = response.error {
@@ -137,7 +137,7 @@ extension Alamofire.DownloadRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseData(queue: DispatchQueue = .main) -> Promise<AFDownloadResponse<Data>> {
+    public func responseData(queue: DispatchQueue = .main) -> Promise<DownloadResponse<Data,AFError>> {
         return Promise { seal in
             responseData(queue: queue) { response in
                 switch response.result {
@@ -154,11 +154,10 @@ extension Alamofire.DownloadRequest {
 
 /// Alamofire.DataResponse, but without the `result`, since the Promise represents the `Result`
 public struct PMKAlamofireDataResponse {
-    public init<T>(_ rawrsp: Alamofire.AFDataResponse<T>) {
+    public init<T,E>(_ rawrsp: Alamofire.DataResponse<T,E>) {
         request = rawrsp.request
         response = rawrsp.response
         data = rawrsp.data
-        metrics = rawrsp.metrics
     }
 
     /// The URL request sent to the server.
@@ -169,7 +168,4 @@ public struct PMKAlamofireDataResponse {
 
     /// The data returned by the server.
     public let data: Data?
-
-    /// The timeline of the complete lifecycle of the request.
-    public let metrics: URLSessionTaskMetrics?
 }
