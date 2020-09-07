@@ -1,6 +1,6 @@
-import Alamofire
 import Foundation
 #if !PMKCocoaPods
+import Alamofire
 import PromiseKit
 #endif
 
