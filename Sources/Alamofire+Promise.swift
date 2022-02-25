@@ -59,18 +59,22 @@ extension Alamofire.DataRequest {
     }
 
     /// Adds a handler to be called once the request has finished.
-    public func responseJSON(queue: DispatchQueue = .main, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(json: Any, response: PMKAlamofireDataResponse)> {
-        return Promise { seal in
-            responseJSON(queue: queue, options: options) { response in
-                switch response.result {
-                case .success(let value):
-                    seal.fulfill((value, PMKAlamofireDataResponse(response)))
-                case .failure(let error):
-                    seal.reject(error)
-                }
-            }
-        }
-    }
+	public func responseJSON(queue: DispatchQueue = .main, options: JSONSerialization.ReadingOptions = .allowFragments) -> Promise<(json: Any, response: PMKAlamofireDataResponse)> {
+		return Promise { seal in
+			responseData(queue: queue) { response in
+				switch response.result {
+				case .success(let dataValue):
+					do {
+						let json = try JSONSerialization.jsonObject(with: dataValue, options: options)
+						seal.fulfill((json, PMKAlamofireDataResponse(response)))
+					} catch {
+						seal.reject(error)
+					}
+				case .failure(let error):
+					seal.reject(error)
+				}
+			}
+ }
 
 #if swift(>=3.2)
     /**
