@@ -12,13 +12,26 @@ let package = Package(
             .library(name: "PMKAlamofire", targets: ["PMKAlamofire"])
         ],
         dependencies: [
-            .package(url: "https://github.com/mxcl/PromiseKit.git", from: "6.13.2"),
-            .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.2.2")
+            .package(url: "https://github.com/mxcl/PromiseKit.git", from: "8.0.0"),
+            .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.2.2"),
+            .package(url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0")
         ],
         targets: [
-            .target(name: "PMKAlamofire", dependencies: [
-                 .product(name: "PromiseKit"),
-                 .product(name: "Alamofire"),
-            ], path: "Sources")
+            .target(
+                name: "PMKAlamofire",
+                dependencies: [
+                    .product(name: "PromiseKit", package: "PromiseKit"),
+                    .product(name: "Alamofire", package: "Alamofire"),
+                ],
+                path: "Sources"
+            ),
+            .testTarget(
+                name: "PMKAlamofireTests",
+                dependencies: [
+                    .target(name: "PMKAlamofire"),
+                    .product(name: "OHHTTPStubs")
+                ],
+                path: "Tests"
+            )
         ],
         swiftLanguageVersions: [.v5])
