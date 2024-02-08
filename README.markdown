@@ -42,7 +42,7 @@ firstly {
 
 ```ruby
 # Podfile
-pod 'PromiseKit/Alamofire', '~> 6.0'
+pod 'PromiseKit/Alamofire', '~> 8.0'
 ```
 
 ```swift
@@ -60,7 +60,7 @@ import Alamofire
 ## Carthage
 
 ```ruby
-github "PromiseKit/PMKAlamofire" ~> 3.0
+github "PromiseKit/PMKAlamofire" ~> 5.0
 ```
 
 The extensions are built into their own framework:
@@ -82,7 +82,7 @@ import PMKAlamofire
 ```swift
 let package = Package(
     dependencies: [
-        .Target(url: "https://github.com/PromiseKit/PMKAlamofire", majorVersion: 3)
+        .Target(url: "https://github.com/PromiseKit/PMKAlamofire", majorVersion: 5)
     ]
 )
 ```
