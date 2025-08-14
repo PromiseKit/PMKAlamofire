@@ -1,3 +1,4 @@
+@_exported import Alamofire
 import Foundation
 #if !PMKCocoaPods
 import Alamofire
