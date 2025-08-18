@@ -3,3 +3,4 @@
 /Carthage
 /.build
 .DS_Store
+.swiftpm/

@@ -12,8 +12,8 @@ let package = Package(
             .library(name: "PMKAlamofire", targets: ["PMKAlamofire"])
         ],
         dependencies: [
-            .package(url: "https://github.com/mxcl/PromiseKit.git", from: "8.1.1"),
-            .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.8.1"),
+            .package(url: "https://github.com/mxcl/PromiseKit.git", from: "8.2.0"),
+            .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.10.2"),
             .package(url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0")
         ],
         targets: [
